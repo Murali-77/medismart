@@ -1,6 +1,10 @@
 import pandas as pd
 import psycopg2
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 file_path = DATA_DIR / "hospital-data-analysis.csv"
@@ -8,9 +12,9 @@ file_path = DATA_DIR / "hospital-data-analysis.csv"
 df = pd.read_csv(file_path)
 
 conn = psycopg2.connect(
-    dbname="hospital_db",
-    user="postgres",
-    password="009111",
+    dbname=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
     host="127.0.0.1",
     port="5432"
 )
