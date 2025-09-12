@@ -18,13 +18,13 @@ def _load_model():
 
 def _train_and_save_model():
     """Train a simple model using the existing hospital data."""
-    from .file_reader import load_data_from_csv
+    from .file_reader import load_data_from_db
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.preprocessing import LabelEncoder
     from sklearn.model_selection import train_test_split
     
     # Load data
-    df = load_data_from_csv()
+    df = load_data_from_db()
     if df.empty:
         print("No data available for training.")
         return None
@@ -72,9 +72,9 @@ def _train_and_save_model():
 # Load the model once when the script starts
 global_patient_risk_model = _load_model()
 
-def predict_patient_outcome_tool_csv(patient_attributes: dict) -> dict:
+def predict_patient_outcome_tool(patient_attributes: dict) -> dict:
     """
-    MCP Tool: Patient Risk Assessment (CSV-based)
+    MCP Tool: Patient Risk Assessment (SQL-based)
     Predicts readmission risk for a patient based on provided attributes.
 
     Args:

@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from .file_reader import load_data_from_csv
+from .file_reader import load_data_from_db
 
-def find_similar_patients_tool_csv(target_patient_attributes: dict, num_similar: int = 5) -> dict:
+def find_similar_patients_tool(target_patient_attributes: dict, num_similar: int = 5) -> dict:
     """
-    MCP Tool: Find Similar Patient Cases (CSV-based)
+    MCP Tool: Find Similar Patient Cases (SQL-based)
     Finds historical patient records most similar to the target patient based on key attributes.
 
     Args:
@@ -17,10 +17,10 @@ def find_similar_patients_tool_csv(target_patient_attributes: dict, num_similar:
         dict: A dictionary containing the most similar patient records,
               or an error/no data message.
     """
-    df = load_data_from_csv()
+    df = load_data_from_db()
 
     if df.empty:
-        return {"status": "error", "message": "CSV file is empty or not found."}
+        return {"status": "error", "message": "Database is empty."}
 
     # Define features to use for similarity (can be customized)
     # These should ideally be the same features used in your prediction models for consistency

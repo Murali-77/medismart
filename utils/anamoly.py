@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import zscore
-from .file_reader import load_data_from_csv
+from .file_reader import load_data_from_db
 
-def detect_data_anomalies_tool_csv(numerical_cols: list[str] = None, categorical_cols: list[str] = None, z_score_threshold: float = 3.0) -> dict:
+def detect_data_anomalies_tool(numerical_cols: list[str] = None, categorical_cols: list[str] = None, z_score_threshold: float = 3.0) -> dict:
     """
-    MCP Tool: Data Quality & Anomaly Detection (CSV-based)
+    MCP Tool: Data Quality & Anomaly Detection (SQL-based)
     Detects anomalies in numerical and specified categorical columns.
 
     Args:
@@ -18,10 +18,10 @@ def detect_data_anomalies_tool_csv(numerical_cols: list[str] = None, categorical
     Returns:
         dict: A dictionary containing detected anomalies, or a success message if none.
     """
-    df = load_data_from_csv()
+    df = load_data_from_db()
 
     if df.empty:
-        return {"status": "error", "message": "CSV file is empty or not found."}
+        return {"status": "error", "message": "Database is empty."}
 
     anomalies = {"numerical_outliers": [], "low_frequency_combinations": []}
 
@@ -47,8 +47,8 @@ def detect_data_anomalies_tool_csv(numerical_cols: list[str] = None, categorical
                     "value": df.loc[idx, col],
                     "reason": f"Outlier (Z-score > {z_score_threshold})"
                 })
-        else:
-            print(f"Warning: Numerical column '{col}' not found or not numeric.")
+        # else:
+        #     print(f"Warning: Numerical column '{col}' not found or not numeric.")
 
     # 2. Low Frequency Categorical Combinations
     # Focus on potentially critical combinations

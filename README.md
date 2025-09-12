@@ -6,7 +6,7 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
 
 ### 📊 **Data Management**
 - **Patient Record Management**: Add, update, and retrieve patient records
-- **CSV-based Storage**: Efficient data storage with pandas integration
+- **MySQL-based Storage**: Efficient data storage with pandas integration
 - **Data Validation**: Robust input validation and error handling
 
 ### 📈 **Machine Learning & Analytics**

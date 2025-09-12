@@ -1,9 +1,9 @@
 from mcp.server.fastmcp import FastMCP
-from utils.file_reader import add_patient_record, update_patient_record_csv, get_patient_record_csv
-from utils.risk import predict_patient_outcome_tool_csv
-from utils.compare_efficacy import compare_treatments_tool_csv
-from utils.similar import find_similar_patients_tool_csv
-from utils.anamoly import detect_data_anomalies_tool_csv
+from utils.file_reader import add_patient_record, update_patient_record, get_patient_record
+from utils.risk import predict_patient_outcome_tool
+from utils.compare_efficacy import compare_treatments_tool
+from utils.similar import find_similar_patients_tool
+from utils.anamoly import detect_data_anomalies_tool
 
 # Create the shared MCP server instance
 mcp = FastMCP("Hospital Patient Data Management System")
@@ -11,8 +11,8 @@ mcp = FastMCP("Hospital Patient Data Management System")
 @mcp.tool()
 def add_record(patient_data: dict) -> dict:
     """
-    MCP Tool: Ingest Patient Data (CSV-based)
-    Adds a new patient record to the CSV file.
+    MCP Tool: Ingest Patient Data (SQL-based)
+    Adds a new patient record to the database.
 
     Args:
         patient_data (dict): A dictionary containing all patient attributes including:
@@ -27,8 +27,8 @@ def add_record(patient_data: dict) -> dict:
 @mcp.tool()
 def update_record(patient_id: int, updates: dict) -> dict:
     """
-    MCP Tool: Transform/Update Patient Data (CSV-based)
-    Updates an existing patient record in the CSV file.
+    MCP Tool: Transform/Update Patient Data (SQL-based)
+    Updates an existing patient record in the database.
 
     Args:
         patient_id (int): The ID of the patient record to update.
@@ -37,13 +37,13 @@ def update_record(patient_id: int, updates: dict) -> dict:
     Returns:
         dict: A dictionary indicating success/failure.
     """
-    return update_patient_record_csv(patient_id, updates)
+    return update_patient_record(patient_id, updates)
 
 @mcp.tool()
 def get_record(patient_id: int = None, query_criteria: dict = None) -> dict:
     """
-    MCP Tool: Retrieve Patient Data (CSV-based)
-    Retrieves one or more patient records from the CSV file.
+    MCP Tool: Retrieve Patient Data (SQL-based)
+    Retrieves one or more patient records from the database.
 
     Args:
         patient_id (int, optional): The ID of a specific patient record to retrieve.
@@ -52,12 +52,12 @@ def get_record(patient_id: int = None, query_criteria: dict = None) -> dict:
     Returns:
         dict: A dictionary containing the retrieved records or an error message.
     """
-    return get_patient_record_csv(patient_id, query_criteria)
+    return get_patient_record(patient_id, query_criteria)
 
 @mcp.tool()
 def risk_assessment(patient_attributes: dict) -> dict:
     """
-    MCP Tool: Patient Risk Assessment (CSV-based)
+    MCP Tool: Patient Risk Assessment (SQL-based)
     Predicts readmission risk for a patient based on provided attributes.
 
     Args:
@@ -67,12 +67,12 @@ def risk_assessment(patient_attributes: dict) -> dict:
     Returns:
         dict: A dictionary with prediction ('Yes'/'No') and probability,
     """
-    return predict_patient_outcome_tool_csv(patient_attributes)
+    return predict_patient_outcome_tool(patient_attributes)
 
 @mcp.tool()
 def compare_treatment(condition: str, procedures: list[str]) -> dict:
     """
-    MCP Tool: Treatment Efficacy Comparison (CSV-based)
+    MCP Tool: Treatment Efficacy Comparison (SQL-based)
     Compares effectiveness metrics for different procedures for a given condition.
 
     Args:
@@ -83,12 +83,12 @@ def compare_treatment(condition: str, procedures: list[str]) -> dict:
         dict: A dictionary containing comparison results for each procedure,
               or an error/no data message.
     """
-    return compare_treatments_tool_csv(condition, procedures)
+    return compare_treatments_tool(condition, procedures)
 
 @mcp.tool()
 def similar_patients(target_patient_attributes: dict, num_similar: int = 5) -> dict:
     """
-    MCP Tool: Find Similar Patient Cases (CSV-based)
+    MCP Tool: Find Similar Patient Cases (SQL-based)
     Finds historical patient records most similar to the target patient based on key attributes.
 
     Args:
@@ -100,12 +100,12 @@ def similar_patients(target_patient_attributes: dict, num_similar: int = 5) -> d
         dict: A dictionary containing the most similar patient records,
               or an error/no data message.
     """
-    return find_similar_patients_tool_csv(target_patient_attributes, num_similar)
+    return find_similar_patients_tool(target_patient_attributes, num_similar)
 
 @mcp.tool()
 def detect_anomaly(numerical_cols: list[str] = None, categorical_cols: list[str] = None, z_score_threshold: float = 3.0) -> dict:
     """
-    MCP Tool: Data Quality & Anomaly Detection (CSV-based)
+    MCP Tool: Data Quality & Anomaly Detection (SQL-based)
     Detects anomalies in numerical and specified categorical columns.
 
     Args:
@@ -118,7 +118,7 @@ def detect_anomaly(numerical_cols: list[str] = None, categorical_cols: list[str]
     Returns:
         dict: A dictionary containing detected anomalies, or a success message if none.
     """
-    return detect_data_anomalies_tool_csv(numerical_cols, categorical_cols, z_score_threshold)
+    return detect_data_anomalies_tool(numerical_cols, categorical_cols, z_score_threshold)
 
 def main():
     """Main function to run the MCP server."""

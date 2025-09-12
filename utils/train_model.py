@@ -6,14 +6,14 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import numpy as np
 import joblib # For saving/loading the trained model
-from file_reader import load_data_from_csv
+from file_reader import load_data_from_db
 
 MODEL_FILE = '../data/patient_risk_model.joblib'
 
-df = load_data_from_csv()
+df = load_data_from_db()
 
 if df.empty:
-    print("Cannot train model: CSV file is empty.")
+    print("Cannot train model: Database is empty.")
 
     # Define features (X) and target (y)
 features = ['Age', 'Gender', 'Condition', 'Procedure', 'Length_of_Stay']

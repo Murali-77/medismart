@@ -1,10 +1,10 @@
 import pandas as pd
 import os
-from .file_reader import load_data_from_csv
+from .file_reader import load_data_from_db
 
-def compare_treatments_tool_csv(condition: str, procedures: list[str]) -> dict:
+def compare_treatments_tool(condition: str, procedures: list[str]) -> dict:
     """
-    MCP Tool: Treatment Efficacy Comparison (CSV-based)
+    MCP Tool: Treatment Efficacy Comparison (SQL-based)
     Compares effectiveness metrics for different procedures for a given condition.
 
     Args:
@@ -15,10 +15,10 @@ def compare_treatments_tool_csv(condition: str, procedures: list[str]) -> dict:
         dict: A dictionary containing comparison results for each procedure,
               or an error/no data message.
     """
-    df = load_data_from_csv()
+    df = load_data_from_db()
 
     if df.empty:
-        return {"status": "error", "message": "CSV file is empty or not found."}
+        return {"status": "error", "message": "Database is empty."}
 
     # Filter data for the specified condition
     condition_df = df[df['Condition'].str.contains(condition, case=False, na=False)]
