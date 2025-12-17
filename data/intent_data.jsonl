@@ -1,0 +1,77 @@
+{"text": "hi", "intent": "greeting"}
+{"text": "hello", "intent": "greeting"}
+{"text": "hey there", "intent": "greeting"}
+{"text": "good morning", "intent": "greeting"}
+{"text": "how are you?", "intent": "greeting"}
+{"text": "bonjour", "intent": "greeting"}
+{"text": "வணக்கம்", "intent": "greeting"}
+{"text": "안녕하세요", "intent": "greeting"}
+{"text": "hola", "intent": "greeting"}
+{"text": "guten tag", "intent": "greeting"}
+{"text": "வாழ்த்துகள்", "intent": "greeting"}
+{"text": "좋은 아침입니다", "intent": "greeting"}
+{"text": "salut", "intent": "greeting"}
+{"text": "add new patient to the system", "intent": "hospital"}
+{"text": "update the medical record for John", "intent": "hospital"}
+{"text": "get me the patient's file", "intent": "hospital"}
+{"text": "assess readmission risk for this patient", "intent": "hospital"}
+{"text": "compare the two treatments", "intent": "hospital"}
+{"text": "find patients similar to Jane", "intent": "hospital"}
+{"text": "detect any data issues", "intent": "hospital"}
+{"text": "insert a new record into the patient DB", "intent": "hospital"}
+{"text": "modify the record of patient id 45", "intent": "hospital"}
+{"text": "retrieve details for Mary", "intent": "hospital"}
+{"text": "how likely is readmission?", "intent": "hospital"}
+{"text": "can you compare bypass vs stent?", "intent": "hospital"}
+{"text": "show patients with similar cases", "intent": "hospital"}
+{"text": "spot anomalies in this dataset", "intent": "hospital"}
+{"text": "compare recovery outcomes of two surgeries", "intent": "hospital"}
+{"text": "add_record for a new admission", "intent": "hospital"}
+{"text": "update_record: change contact number", "intent": "hospital"}
+{"text": "get_record for all diabetic patients", "intent": "hospital"}
+{"text": "run a risk_assessment", "intent": "hospital"}
+{"text": "execute compare_treatment for heart disease", "intent": "hospital"}
+{"text": "use similar_patients for John", "intent": "hospital"}
+{"text": "trigger detect_anomaly now", "intent": "hospital"}
+{"text": "save a patient admission", "intent": "hospital"}
+{"text": "pull up the record for Mr. Kumar", "intent": "hospital"}
+{"text": "how risky is a readmission for her?", "intent": "hospital"}
+{"text": "find medical cases like this one", "intent": "hospital"}
+{"text": "look for similar patients", "intent": "hospital"}
+{"text": "compare procedures for cancer treatment", "intent": "hospital"}
+{"text": "retrieve patient history", "intent": "hospital"}
+{"text": "update emergency contact in the database", "intent": "hospital"}
+{"text": "இந்த நோயாளியின் தகவல்களை பெறுங்கள்", "intent": "hospital"}
+{"text": "환자 정보를 추가하세요", "intent": "hospital"}
+{"text": "actualiza el historial médico del paciente", "intent": "hospital"}
+{"text": "Ajoutez les données du patient", "intent": "hospital"}
+{"text": "Pacientendaten aktualisieren", "intent": "hospital"}
+{"text": "comparez les traitements disponibles", "intent": "hospital"}
+{"text": "Similaritätsanalyse für Patienten", "intent": "hospital"}
+{"text": "detectar anomalías en los datos", "intent": "hospital"}
+{"text": "이 환자와 유사한 사례를 찾아줘", "intent": "hospital"}
+{"text": "患者の再入院リスクを評価してください", "intent": "hospital"}
+{"text": "பாதுகாப்பு மதிப்பீடு", "intent": "hospital"}
+{"text": "எந்த சிகிச்சை சிறந்தது என்று ஒப்பிடுங்கள்", "intent": "hospital"}
+{"text": "compare outcomes for diabetic and hypertensive patients", "intent": "hospital"}
+{"text": "Can you see if this patient's condition is similar to anyone?", "intent": "hospital"}
+{"text": "What are the chances of them coming back?", "intent": "hospital"}
+{"text": "I'd like to see their past records", "intent": "hospital"}
+{"text": "Pull record from the archive", "intent": "hospital"}
+{"text": "tell me a joke", "intent": "unrelated"}
+{"text": "who is the president of India?", "intent": "unrelated"}
+{"text": "what is the capital of France?", "intent": "unrelated"}
+{"text": "what's 1 + 1?", "intent": "unrelated"}
+{"text": "why is the sky blue?", "intent": "unrelated"}
+{"text": "how to make pasta?", "intent": "unrelated"}
+{"text": "gib mir das Wetter heute", "intent": "unrelated"}
+{"text": "இந்த வாரம் மழை பெய்யுமா?", "intent": "unrelated"}
+{"text": "K-pop groups to recommend?", "intent": "unrelated"}
+{"text": "tell me a fun fact", "intent": "unrelated"}
+{"text": "recite the national anthem", "intent": "unrelated"}
+{"text": "draw a cat in ASCII", "intent": "unrelated"}
+{"text": "translate hello to Japanese", "intent": "unrelated"}
+{"text": "play a song", "intent": "unrelated"}
+{"text": "who won the last World Cup?", "intent": "unrelated"}
+{"text": "how far is the moon?", "intent": "unrelated"}
+{"text": "create a React app", "intent": "unrelated"}

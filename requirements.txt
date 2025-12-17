@@ -10,6 +10,7 @@ sqlalchemy
 requests
 langchain
 streamlit
+streamlit-authenticator
 langchain-groq
 langgraph
 langchain-mcp-adapters

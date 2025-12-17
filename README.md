@@ -18,9 +18,9 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
 
 ### 🤖 **Custom Client Interface**
 - **Streamlit Chatbot**: Interactive web-based chat interface (`client.py`)
-- **Multilingual Support**: Detects user language and responds accordingly
 - **Intent Routing**: Automatically classifies queries as hospital-related, greetings, or unrelated
 - **Conversation Memory**: Maintains chat history with clear and close options
+- **RBAC**: Login / Signup functionality with role based conditional tool access
 
 ### 🔧 **MCP Tools Available**
 
@@ -45,7 +45,7 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/JashwanthSA/medismart
    cd file_reader
    ```
 
@@ -85,7 +85,7 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
    
    The server supports two transport modes:
    
-   **A. Streamable HTTP Transport** (for custom clients like `client.py`):
+   **A. Streamable HTTP Transport** (for custom clients like `Chatbot.py`):
    ```bash
    python server.py
    ```
@@ -105,7 +105,7 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
    
    In a separate terminal, run the Streamlit chatbot:
    ```bash
-   streamlit run client.py
+   streamlit run Chatbot.py
    ```
    
    This will open a web browser with the interactive chat interface at `http://localhost:8501`
@@ -286,7 +286,7 @@ The server supports two transport modes depending on your use case:
 - **Thresholds**: Adjustable parameters for anomaly detection
 
 ### Client Configuration
-The custom Streamlit client (`client.py`) requires:
+The custom Streamlit client (`Chatbot.py`) requires:
 - `.env` file with `GROQ_API_KEY`
 - `hospital_mcp.json` configuration file
 - Trained intent classifier model (run `utils/train_intent_model.py`)
