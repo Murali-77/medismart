@@ -112,12 +112,10 @@ def get_disallowed_tools_for_user(user_role: str) -> list[str]:
     Returns:
         List of tool names that should be disallowed
     """
-    # Collect all tools the user IS allowed to access
     allowed_tools = set()
     if user_role in ROLE_PERMISSIONS:
         allowed_tools.update(ROLE_PERMISSIONS[user_role])
     
-    # Tools NOT in allowed list = disallowed
     disallowed = list(ALL_TOOLS - allowed_tools)
     
     return disallowed
@@ -130,7 +128,7 @@ def get_allowed_tools_for_user(user_role: str) -> set[str]:
     return set()
 
 
-# Load environment variables - use explicit path and override to ensure .env changes are picked up
+# Load environment variables
 ENV_FILE = Path(__file__).parent.resolve() / ".env"
 print(f"Loading .env from: {ENV_FILE}")
 print(f".env file exists: {ENV_FILE.exists()}")
@@ -142,10 +140,6 @@ load_dotenv(ENV_FILE, override=True)
 
 def get_llm():
     """Get the Azure GPT-4o LLM instance."""
-    print(os.getenv("AZURE_OPENAI_ENDPOINT"))
-    print(os.getenv("AZURE_OPENAI_API_KEY"))
-    print(os.getenv("AZURE_OPENAI_DEPLOYMENT"))
-    print("--------------------------------")
     return AzureChatOpenAI(
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),
@@ -343,16 +337,6 @@ def main():
             st.sidebar.markdown(f"**{category}**")
             for tool in category_tools:
                 st.sidebar.markdown(f"  - `{tool}`")
-    
-    st.sidebar.divider()
-    
-    # Example workflows
-    st.sidebar.markdown("**💡 Example Multi-Tool Queries:**")
-    st.sidebar.markdown("""
-    - "Get patient 5's record and run a counterfactual analysis"
-    - "Show me patient 10 and predict their readmission risk"
-    - "Get KPIs and then generate a bar chart for admissions by condition"
-    """)
     
     st.sidebar.divider()
     

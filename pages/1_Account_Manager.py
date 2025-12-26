@@ -56,7 +56,7 @@ with register_tab:
         # Role selection dropdown
         role = st.selectbox(
             "Select Role",
-            options=["doctor", "nurse", "admin"],
+            options=["doctor", "nurse"],
             help="Choose your role in the system"
         )
     
