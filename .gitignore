@@ -6,7 +6,6 @@ dist/
 wheels/
 embed_model/
 *.egg-info
-
 # Virtual environments
 .venv
 .env

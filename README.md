@@ -1,45 +1,71 @@
 # MediSmart - Hospital Assistant MCP Server
 
-A comprehensive Model Context Protocol (MCP) server for hospital patient data management, featuring advanced analytics, risk assessment, treatment efficacy comparison capabilities, and a custom Streamlit-based chatbot client with multilingual intent classification.
+A comprehensive Model Context Protocol (MCP) server for hospital patient data management, featuring advanced analytics, ML-powered predictions with SHAP explanations, data visualization, and custom Streamlit-based chatbot clients with multilingual intent classification and RBAC.
 
 ## 🌟 Features
 
 ### 📊 **Data Management**
 - **Patient Record Management**: Add, update, and retrieve patient records
-- **MySQL-based Storage**: Efficient data storage with pandas integration
+- **PostgreSQL-based Storage**: Efficient data storage with SQLAlchemy ORM
 - **Data Validation**: Robust input validation and error handling
+- **Record Summarization**: Quick patient summaries and overviews
 
 ### 📈 **Machine Learning & Analytics**
-- **Risk Assessment**: Predict patient readmission risk using Random Forest models
+- **Risk Assessment with SHAP**: Predict patient readmission risk with explainable AI
+- **Length of Stay Prediction**: ML-powered hospital stay duration estimation
 - **Treatment Comparison**: Compare effectiveness of different medical procedures
 - **Similar Patient Search**: Find historical cases similar to current patients
+- **Counterfactual Analysis**: What-if scenarios for readmission prevention
 - **Anomaly Detection**: Identify data quality issues and outliers
-- **Intent Classification**: Multilingual intent detection to route queries appropriately
+- **KPI Dashboard**: Key performance indicators and hospital metrics
+- **Satisfaction Analysis**: Patient satisfaction drivers report
 
-### 🤖 **Custom Client Interface**
-- **Streamlit Chatbot**: Interactive web-based chat interface (`client.py`)
+### 📊 **Data Visualization**
+- **Chart Generation**: Bar, line, pie, histogram, and boxplot charts
+- **Metric Analysis**: Visualize billing, admissions, age, length of stay
+- **Grouped Analysis**: Group data by condition, procedure, gender, outcome
+
+### 🤖 **Custom Client Interfaces**
+- **Streamlit Chatbot** (`Chatbot.py`): Single-tool interactive chat interface
+- **ReAct Agent Chatbot** (`Chatbot_react.py`): Multi-tool workflow support
 - **Intent Routing**: Automatically classifies queries as hospital-related, greetings, or unrelated
 - **Conversation Memory**: Maintains chat history with clear and close options
-- **RBAC**: Login / Signup functionality with role based conditional tool access
+- **RBAC**: Login/Signup functionality with role-based conditional tool access
 
 ### 🔧 **MCP Tools Available**
 
-| Tool | Function | Description |
+| Tool | Category | Description |
 |------|----------|-------------|
-| `add_record` | Data Ingestion | Add new patient records to the system |
-| `update_record` | Data Transformation | Update existing patient information |
-| `get_record` | Data Retrieval | Query patient records with flexible criteria |
-| `risk_assessment` | Predictive Analytics | Assess readmission risk for patients |
-| `compare_treatment` | Comparative Analysis | Compare treatment efficacy for conditions |
-| `similar_patients` | Pattern Matching | Find similar historical patient cases |
-| `detect_anomaly` | Data Quality | Identify anomalies and data quality issues |
+| `add_record` | Data Management | Add new patient records to the system |
+| `update_record` | Data Management | Update existing patient information |
+| `get_record` | Data Management | Query patient records with flexible criteria |
+| `get_record_summary` | Data Management | Get a quick summary of patient records |
+| `risk_assessment` | ML Predictions | Assess readmission risk with SHAP explanations |
+| `predict_length_of_stay` | ML Predictions | Predict hospital stay duration |
+| `counterfactual_readmission` | ML Predictions | What-if analysis for readmission prevention |
+| `compare_treatment` | Clinical Tools | Compare treatment efficacy for conditions |
+| `similar_patients` | Clinical Tools | Find similar historical patient cases |
+| `triage_queue` | Clinical Tools | Patient prioritization queue |
+| `detect_anomaly` | Analytics | Identify anomalies and data quality issues |
+| `kpi_overview` | Analytics | Hospital key performance indicators |
+| `length_of_stay_benchmark` | Analytics | LOS benchmarking by condition/procedure |
+| `satisfaction_drivers_report` | Analytics | Patient satisfaction analysis |
+| `generate_chart` | Visualization | Generate various data visualization charts |
+
+### 🔐 **Role-Based Access Control (RBAC)**
+
+| Role | Allowed Tools |
+|------|---------------|
+| **Doctor** | All 15 tools including ML predictions, counterfactual analysis, and SHAP explanations |
+| **Nurse** | 11 tools (excludes risk_assessment, satisfaction_drivers_report, predict_length_of_stay, counterfactual_readmission) |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.10 or higher
 - pip or uv package manager
-- GROQ API Key (for the custom client)
+- PostgreSQL database (or modify for other databases)
+- Azure OpenAI API access (for GPT-4o) or GROQ API Key
 
 ### Installation
 
@@ -58,34 +84,50 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
    pip install -r requirements.txt
    ```
 
-3. **Train the Intent Classifier Model** (Required for custom client)
+3. **Train Required Models**
    
-   Before using the custom Streamlit client, you must train the intent classification model:
+   Before using the system, train both ML models:
    
    ```bash
-   cd utils
-   python train_intent_model.py
-   cd ..
-   ```
+   # Train the intent classifier (for chatbot routing)
+   python utils/train_intent_model.py
    
-   This will:
-   - Load training data from `data/intent_data.jsonl`
-   - Train a multilingual intent classifier using sentence transformers
-   - Save the trained model to `data/intent_clf_transformer.joblib`
-   - Save the embedding model to `data/embed_model/`
+   # Train the risk assessment model
+   python utils/train_risk_model.py
+   
+   # Train the length of stay model
+   python utils/train_los_model.py
+   ```
 
-4. **Set up environment variables** (For custom client)
+4. **Set up environment variables**
    
    Create a `.env` file in the project root:
    ```bash
-   GROQ_API_KEY=your_groq_api_key_here
+   # LLM Provider: "azure_openai" or "groq"
+   LLM_PROVIDER=azure_openai
+   
+   # Azure OpenAI Configuration (if using Azure)
+   AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
+   AZURE_OPENAI_API_KEY=your_api_key
+   AZURE_OPENAI_API_VERSION=2024-08-01-preview
+   AZURE_OPENAI_DEPLOYMENT=gpt-4o
+   
+   # GROQ Configuration (if using GROQ)
+   GROQ_API_KEY=your_groq_api_key
+   GROQ_MODEL=llama-3.3-70b-versatile
+   
+   # Database Configuration
+   DB_HOST=localhost
+   DB_NAME=hospital_db
+   DB_USER=your_user
+   DB_PASSWORD=your_password
    ```
 
 5. **Run the MCP server**
    
    The server supports two transport modes:
    
-   **A. Streamable HTTP Transport** (for custom clients like `Chatbot.py`):
+   **A. Streamable HTTP Transport** (for custom clients):
    ```bash
    python server.py
    ```
@@ -101,63 +143,53 @@ A comprehensive Model Context Protocol (MCP) server for hospital patient data ma
    mcp.run(transport="stdio")
    ```
 
-6. **Launch the Custom Client** (Optional)
+6. **Launch the Custom Client**
    
-   In a separate terminal, run the Streamlit chatbot:
+   In a separate terminal, run one of the Streamlit chatbots:
+   
    ```bash
+   # Standard chatbot (single-tool per request)
    streamlit run Chatbot.py
-   ```
    
-   This will open a web browser with the interactive chat interface at `http://localhost:8501`
+   # ReAct agent chatbot (multi-tool workflows)
+   streamlit run Chatbot_react.py --server.port 8503
+   ```
 
-## 🖥️ Usage Modes
+## 🖥️ Client Options
 
-### Mode 1: Custom Streamlit Client (HTTP Transport)
+### Option 1: Standard Chatbot (`Chatbot.py`)
 
-The custom client provides an interactive web-based chat interface with the following features:
+Single-tool execution per request. Best for simple queries.
 
 **Features:**
-- 🌍 **Multilingual Support**: Automatically detects and responds in 20+ languages
-- 🎯 **Smart Intent Routing**: Classifies queries as hospital-related, greetings, or unrelated
-- 💬 **Conversation Memory**: Maintains chat history throughout the session
-- 🧠 **Powered by GROQ**: Fast LLM inference using Llama 3.3 70B model
-- 🔧 **MCP Integration**: Seamlessly calls MCP tools for hospital data operations
+- 🌍 Multilingual Support
+- 🎯 Smart Intent Routing
+- 💬 Conversation Memory
+- 🔐 RBAC Integration
+- 📊 Chart Rendering
+- 🔄 Swappable LLM (Azure OpenAI / GROQ)
 
-**Setup Requirements:**
-1. Train the intent classifier: `python utils/train_intent_model.py`
-2. Create `.env` file with your GROQ API key
-3. Start MCP server in HTTP mode: `python server.py`
-4. Launch client: `streamlit run client.py`
+### Option 2: ReAct Agent Chatbot (`Chatbot_react.py`)
 
-**User Experience:**
-- Type queries in any supported language
-- System automatically routes hospital queries to MCP tools
-- Greetings receive friendly responses in the detected language
-- Non-hospital queries are politely declined
-- View conversation history in the sidebar
-- Clear chat or close MCP sessions anytime
+Multi-tool workflow support using LangChain's ReAct agent.
 
-### Mode 2: Claude Desktop Integration (Stdio Transport)
+**Features:**
+- 🔄 **Multi-Tool Chaining**: Execute multiple tools in sequence
+- 🧠 **Intelligent Routing**: Agent decides which tools to call
+- 📋 **Complex Workflows**: e.g., "Get patient 5 and run counterfactual analysis"
 
-For using the MCP server directly with Claude Desktop:
+**Example Multi-Tool Queries:**
+```text
+Get patient 5's record and assess their readmission risk
+Fetch patient 10 and run a counterfactual analysis
+Show KPIs and then generate a bar chart for admissions by condition
+```
 
-**Setup Requirements:**
-1. Modify `server.py` to use stdio transport:
-   ```python
-   mcp.run(transport="stdio")  # Change from "streamable-http"
-   ```
-2. Add configuration to Claude Desktop's MCP settings file
-3. Restart Claude Desktop
+### Option 3: Claude Desktop (Stdio Transport)
 
-**User Experience:**
-- Interact through Claude Desktop's native interface
-- Claude AI directly invokes MCP tools as needed
-- No additional client setup required
-- Full access to all MCP tools
+Direct integration with Claude Desktop for native MCP tool access.
 
 ## 📋 Data Schema
-
-The system works with hospital patient data containing the following fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -174,127 +206,126 @@ The system works with hospital patient data containing the following fields:
 
 ## 🔍 Usage Examples
 
-### Adding a Patient Record
-```python
-patient_data = {
-    "Age": 45,
-    "Gender": "Female",
-    "Condition": "Heart Disease",
-    "Procedure": "Angioplasty",
-    "Cost": 15000,
-    "Length_of_Stay": 5,
-    "Readmission": "No",
-    "Outcome": "Recovered",
-    "Satisfaction": 4
-}
-result = add_record(patient_data)
-```
-
-### Risk Assessment
+### Risk Assessment with SHAP Explanations
 ```python
 patient_attributes = {
     "Age": 65,
     "Gender": "Male",
     "Condition": "Diabetes",
     "Procedure": "Insulin Therapy",
-    "Length_of_Stay": 3
+    "Length_of_Stay": 5,
+    "Cost": 8000
 }
 risk_result = risk_assessment(patient_attributes)
-# Returns: {"predicted_readmission": "No", "probability_of_readmission": "0.23"}
+# Returns prediction with SHAP feature importance explanations
 ```
 
-### Treatment Comparison
+### Generate Visualization
 ```python
-condition = "Heart Disease"
-procedures = ["Angioplasty", "Cardiac Catheterization"]
-comparison = compare_treatment(condition, procedures)
+chart_result = generate_chart(
+    plot_type="bar",
+    metric="age",
+    group_by="condition"
+)
+# Returns PNG image of the chart
+```
+
+### Multi-Tool Workflow (ReAct Agent)
+```text
+User: "Get patient 5's record and run counterfactual analysis"
+
+Agent executes:
+1. get_record(patient_id=5) → Gets patient details
+2. counterfactual_readmission(patient_attributes=...) → Analyzes scenarios
+3. Returns combined insights
 ```
 
 ## 🏗️ Architecture
 
 ```
 file_reader/
-├── client.py                    # Streamlit-based custom chatbot client
-├── server.py                    # MCP server implementation (HTTP/stdio)
-├── hospital_mcp.json            # MCP client configuration for HTTP transport
-├── .env                         # Environment variables (GROQ_API_KEY)
+├── Chatbot.py                   # Standard Streamlit chatbot (single-tool)
+├── Chatbot_react.py             # ReAct agent chatbot (multi-tool)
+├── server.py                    # MCP server implementation
+├── hospital_mcp.json            # MCP client configuration
+├── .env                         # Environment variables
 ├── data/                        # Data storage
 │   ├── hospital-data-analysis.csv
-│   ├── patient_risk_model.joblib
-│   ├── intent_data.jsonl        # Training data for intent classifier
-│   ├── intent_clf_transformer.joblib  # Trained intent model
-│   └── embed_model/             # Sentence transformer embeddings
+│   ├── patient_risk_model.joblib    # Risk assessment model
+│   ├── patient_los_model.joblib     # Length of stay model
+│   ├── intent_clf_transformer.joblib
+│   ├── embed_model/
+│   └── charts/                      # Generated chart images
 ├── utils/                       # Core functionality modules
 │   ├── file_reader.py           # Data I/O operations
-│   ├── risk.py                  # Risk assessment & ML
+│   ├── risk.py                  # Risk assessment with SHAP
+│   ├── los.py                   # Length of stay prediction
+│   ├── analytics.py             # KPIs, benchmarks, summaries
+│   ├── triage.py                # Patient triage queue
+│   ├── counterfactual.py        # What-if analysis
+│   ├── plotting.py              # Chart generation
 │   ├── compare_efficacy.py      # Treatment comparison
 │   ├── similar.py               # Similar patient search
 │   ├── anamoly.py               # Anomaly detection
-│   ├── train_model.py           # Patient risk model training
+│   ├── train_risk_model.py      # Risk model training
+│   ├── train_los_model.py       # LOS model training
 │   ├── train_intent_model.py    # Intent classifier training
-│   └── intent_classifier.py     # Intent detection & multilingual support
-└── pyproject.toml               # Project configuration
+│   └── intent_classifier.py     # Intent detection
+└── pyproject.toml
 ```
 
-
-## 🤖 Machine Learning Features
+## 🤖 Machine Learning Models
 
 ### Risk Assessment Model
 - **Algorithm**: Random Forest Classifier
-- **Features**: Age, Gender, Condition, Procedure, Length of Stay
-- **Target**: Readmission prediction
-- **Accuracy**: Trained on 989 patient records
-- **Auto-training**: Automatically trains if model file is missing
+- **Features**: Age, Gender, Condition, Procedure, Length of Stay, Cost
+- **Target**: Readmission prediction (Yes/No)
+- **Explainability**: SHAP values for feature importance
+- **Training**: `python utils/train_risk_model.py`
+
+### Length of Stay Prediction Model
+- **Algorithm**: Random Forest Regressor
+- **Features**: Age, Gender, Condition, Procedure, Cost
+- **Target**: Length of Stay (days)
+- **Explainability**: SHAP values for feature importance
+- **Training**: `python utils/train_los_model.py`
 
 ### Intent Classification Model
 - **Algorithm**: Logistic Regression with Sentence Transformers
-- **Embeddings**: Multilingual paraphrase model (paraphrase-multilingual-MiniLM-L12-v2)
-- **Supported Languages**: English, Spanish, French, German, Italian, Hindi, Tamil, Chinese, Japanese, Korean, and more
-- **Intent Categories**: 
-  - `hospital`: Hospital/medical-related queries
-  - `greeting`: Welcome and conversational greetings
-  - `unrelated`: Non-hospital queries
-- **Training Required**: Must run `utils/train_intent_model.py` before using the custom client
+- **Embeddings**: Multilingual paraphrase model
+- **Categories**: `hospital`, `greeting`, `unrelated`
+- **Training**: `python utils/train_intent_model.py`
 
-### Data Analytics
-- **Treatment Efficacy**: Success rates, costs, and outcomes comparison
-- **Pattern Recognition**: Find similar patient cases using key attributes
-- **Anomaly Detection**: Z-score based outlier detection for numerical data
-- **Quality Assurance**: Comprehensive data validation and error handling
+## 🧪 Testing
 
-## 🤝 Configuration
+### Using MCP Inspector
 
-### MCP Server Settings
-The server supports two transport modes depending on your use case:
+Connect MCP Inspector to test tools directly:
 
-1. **Streamable HTTP Transport** (Default in `server.py`):
-   - Used for custom client integration (e.g., `client.py`)
-   - Server URL: `http://localhost:8000/mcp`
-   - Configuration file: `hospital_mcp.json`
+```bash
+npx @modelcontextprotocol/inspector http://localhost:8000/mcp
+```
 
-2. **Stdio Transport**:
-   - Used for Claude Desktop integration
-   - Requires modifying `server.py` to use `transport="stdio"`
-   - Configure in Claude Desktop's MCP settings
+See `docs/mcp_inspector_guide.md` for detailed setup instructions.
 
-### Model Configuration
-- **Risk Model File**: `data/patient_risk_model.joblib`
-- **Intent Model File**: `data/intent_clf_transformer.joblib`
-- **Embedding Model**: `data/embed_model/`
-- **Training Data**: `data/hospital-data-analysis.csv` and `data/intent_data.jsonl`
-- **Features**: Configurable feature set for risk assessment
-- **Thresholds**: Adjustable parameters for anomaly detection
+### Test Queries
 
-### Client Configuration
-The custom Streamlit client (`Chatbot.py`) requires:
-- `.env` file with `GROQ_API_KEY`
-- `hospital_mcp.json` configuration file
-- Trained intent classifier model (run `utils/train_intent_model.py`)
-- MCP server running on HTTP transport
+See `docs/testing_queries.md` for comprehensive test queries including:
+- Single-tool test cases
+- Multi-tool workflow examples
+- Edge cases and error handling
 
-### Sample MCP Configuration Files
+## 🔧 Configuration
 
-#### For Custom Client (HTTP Transport) - `hospital_mcp.json`:
+### LLM Provider Selection
+
+Set `LLM_PROVIDER` in `.env`:
+- `azure_openai`: Uses Azure GPT-4o (recommended for multi-tool workflows)
+- `groq`: Uses GROQ Llama 3.3 70B (faster, but smaller context)
+
+### MCP Server Configuration
+
+**For Custom Client (HTTP Transport)** - `hospital_mcp.json`:
 ```json
 {
   "mcpServers": {
@@ -306,67 +337,45 @@ The custom Streamlit client (`Chatbot.py`) requires:
 }
 ```
 
-#### For Claude Desktop (Stdio Transport):
+**For Claude Desktop (Stdio Transport)**:
 ```json
 {
   "mcpServers": {
     "hospital-patient-data": {
-      "command": "uv",
-      "args": [
-        "run",
-        "python",
-        "server.py"
-      ],
-      "cwd": "The current directory of the code files",
-      "env": {}
+      "command": "python",
+      "args": ["server.py"],
+      "cwd": "/path/to/project"
     }
   }
 }
 ```
 
-**Note**: When using with Claude Desktop, ensure `server.py` is configured with `transport="stdio"` instead of `transport="streamable-http"`.
-
 ## 📊 Sample Data
-Sample dataset link: [Click here](https://www.kaggle.com/datasets/blueblushed/hospital-dataset-for-practice/data)
 
-This comprehensive dataset contains 989 patient records covering:
+Sample dataset: [Hospital Dataset on Kaggle](https://www.kaggle.com/datasets/blueblushed/hospital-dataset-for-practice/data)
+
+- **989 patient records**
 - **10 Medical Conditions**: Heart Disease, Diabetes, Cancer, Stroke, etc.
 - **15+ Procedures**: Angioplasty, Insulin Therapy, Surgery, etc.
 - **Diverse Demographics**: Age range 25-78, both genders
-- **Realistic Metrics**: Costs, stay durations, outcomes, satisfaction scores
 
 ## 🛠️ Development
 
 ### Adding New Tools
-1. Create a new function in the appropriate `utils/` module
-2. Add the `@mcp.tool()` decorator in `server.py`
-3. Update documentation and examples
 
-### Extending the Models
-1. **Risk Assessment Model**: 
-   - Modify `utils/train_model.py` for new ML algorithms
-   - Update feature engineering in `utils/risk.py`
-   - Retrain and save the model using `utils/train_model.py`
+1. Create function in appropriate `utils/` module
+2. Add `@mcp.tool()` decorator in `server.py`
+3. Update RBAC permissions in `Chatbot.py` and `Chatbot_react.py`
+4. Add test queries to `docs/testing_queries.md`
 
-2. **Intent Classifier Model**:
-   - Add new training examples to `data/intent_data.jsonl`
-   - Modify intent categories in `utils/train_intent_model.py`
-   - Retrain the model: `python utils/train_intent_model.py`
-   - Update intent handling logic in `client.py`
+### Retraining Models
 
-### Working with the Custom Client
-The Streamlit client (`client.py`) features:
-- **Session Management**: MCP sessions with conversation history
-- **Async Processing**: Handles long-running MCP tool calls
-- **Intent Detection**: Routes queries based on detected intent
-- **Multilingual Responses**: Automatic language detection and translation
-- **Error Handling**: Graceful handling of API and connection errors
-
-To customize the client:
-- Modify UI components in `client.py`
-- Update intent routing logic
-- Add new response handlers
-- Configure LLM parameters (model, temperature, etc.)
+```bash
+# After updating training data
+python utils/train_risk_model.py
+python utils/train_los_model.py
+python utils/train_intent_model.py
+```
 
 ## 🤝 Contributing
 
@@ -375,3 +384,7 @@ To customize the client:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
